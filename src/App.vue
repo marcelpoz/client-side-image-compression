@@ -27,7 +27,11 @@
 
       <button
         class="upload"
-        :disabled="!file || !maxWidth"
+        :disabled="
+          !file ||
+          !maxWidth ||
+          (resizeFile === this.file && resizeMaxWidth === Number(maxWidth))
+        "
         @click="handleResizeClick"
       >
         Resize and compress
@@ -35,7 +39,11 @@
 
       <div class="output">
         <OriginalImgOutput :file="file" />
-        <ResizedImage :key="resizeKey" :file="resizeFile" :max-width="resizeMaxWidth" />
+        <ResizedImage
+          :key="resizeKey"
+          :file="resizeFile"
+          :max-width="resizeMaxWidth"
+        />
       </div>
     </div>
   </div>
@@ -75,6 +83,12 @@ export default {
     },
 
     handleResizeClick() {
+      if (
+        this.resizeFile === this.file &&
+        this.resizeMaxWidth === Number(this.maxWidth)
+      )
+        return;
+
       this.resizeKey += 1;
       this.resizeFile = this.file;
       this.resizeMaxWidth = Number(this.maxWidth);
