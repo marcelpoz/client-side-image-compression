@@ -140,7 +140,7 @@ export default {
 <style lang="scss" scoped>
 #app {
   min-height: 100vh;
-  padding: 3.2rem;
+  padding: 2rem;
   text-align: center;
 
   &.size-reduction-active {
@@ -158,8 +158,15 @@ export default {
 }
 
 .output {
-  display: flex;
+  display: grid;
+  width: 100%;
+  grid-template-columns: minmax(0, 1fr);
   gap: 2rem;
+  margin: 2rem 0;
+
+  @media screen and (min-width: 768px) {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
 }
 
 h1 {
