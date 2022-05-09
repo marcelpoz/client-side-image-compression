@@ -1,5 +1,5 @@
 <template>
-  <section class="resized-image">
+  <section class="resized-image" :class="{ 'resized-image--has-image': file }">
     <h3 class="resized-image__title">Resized image</h3>
     <div class="resized-image__inner">
       <Loader v-if="loading" class="resized-image__loader" />
@@ -82,7 +82,6 @@ export default {
 
             // When the ratio is lower than 1, the image is larger than it should be and we need to resize it
             if (ratio < 1) {
-
               // Create 2D canvas context
               const canvas = document.createElement("canvas");
               const ctx = canvas.getContext("2d");
@@ -145,6 +144,8 @@ export default {
 
 <style lang="scss" scoped>
 .resized-image {
+  $block: &;
+
   &__title {
     margin-bottom: 1em;
   }
@@ -154,9 +155,13 @@ export default {
     align-items: center;
     justify-content: center;
     min-height: 500px;
-    width: 500px;
+    width: 100%;
     background-color: #fafafa;
     border: 1px solid #ccc;
+
+    #{$block}--has-image & {
+      min-height: 0;
+    }
   }
 
   &__result {
