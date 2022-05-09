@@ -1,41 +1,49 @@
 <template>
-  <div id="app">
+  <div id="app" :class="{ 'size-reduction-active': sizeReduction }">
     <div class="container">
       <h1>Compress img to smaller boi using canvas</h1>
       <p>
         This is a simple image compression tool that uses canvas to resize
-        images to a max width of:
+        images.
       </p>
 
-      <FieldInput
-        type="number"
-        name="maxWidth"
-        class="max-width-input"
-        placeholder-value="Enter number here..."
-        value-type="px"
-        :initial-value="maxWidth"
-        @input="handleMaxWidthInputChange"
-      />
-      <FieldImageUpload
-        name="image-field"
-        @change="handleFieldImageUploadChange"
-      >
-        <template #label>
-          <span>Upload an image</span>
-        </template>
-      </FieldImageUpload>
+      <form @submit.prevent="handleResizeClick">
+        <FieldInput
+          class="max-width-input"
+          type="number"
+          name="maxWidth"
+          label-value="Max width"
+          placeholder-value="Enter number here..."
+          value-type="px"
+          min="1"
+          :initial-value="maxWidth"
+          @input="handleMaxWidthInputChange"
+        />
+        <FieldInput
+          class="max-width-input"
+          type="number"
+          name="quality"
+          label-value="Quality level"
+          placeholder-value="Enter number here..."
+          value-type="%"
+          min="1"
+          max="100"
+          :initial-value="quality"
+          @input="handleQualityInputChange"
+        />
+        <FieldImageUpload
+          name="image-field"
+          @change="handleFieldImageUploadChange"
+        >
+          <template #label>
+            <span>Upload an image</span>
+          </template>
+        </FieldImageUpload>
 
-      <button
-        class="upload"
-        :disabled="
-          !file ||
-          !maxWidth ||
-          (resizeFile === this.file && resizeMaxWidth === Number(maxWidth))
-        "
-        @click="handleResizeClick"
-      >
-        Resize and compress
-      </button>
+        <button class="btn" :disabled="!formIsValid || formHasNotChanged">
+          Resize and compress
+        </button>
+      </form>
 
       <div class="output">
         <OriginalImgOutput :file="file" />
@@ -43,9 +51,15 @@
           :key="resizeKey"
           :file="resizeFile"
           :max-width="resizeMaxWidth"
+          :quality="resizeQuality"
+          @change="handleResizeChange"
         />
       </div>
     </div>
+
+    <footer class="size-reduction" :class="{ active: sizeReduction }">
+      Size reduced by <span>{{ sizeReduction }}%</span>
+    </footer>
   </div>
 </template>
 
@@ -67,10 +81,27 @@ export default {
     return {
       file: undefined,
       maxWidth: "500",
+      quality: "75",
       resizeFile: undefined,
       resizeMaxWidth: 500,
+      resizeQuality: 0.75,
       resizeKey: 0,
+      sizeReduction: undefined,
     };
+  },
+
+  computed: {
+    formIsValid() {
+      return this.file && this.maxWidth && this.quality;
+    },
+
+    formHasNotChanged() {
+      return (
+        this.resizeFile === this.file &&
+        this.resizeMaxWidth === Number(this.maxWidth) &&
+        this.quality === `${this.resizeQuality * 100}`
+      );
+    },
   },
 
   methods: {
@@ -82,16 +113,25 @@ export default {
       this.maxWidth = value;
     },
 
+    handleQualityInputChange(value) {
+      this.quality = value;
+    },
+
     handleResizeClick() {
-      if (
-        this.resizeFile === this.file &&
-        this.resizeMaxWidth === Number(this.maxWidth)
-      )
-        return;
+      if (!this.formIsValid || this.formHasNotChanged) return;
 
       this.resizeKey += 1;
       this.resizeFile = this.file;
       this.resizeMaxWidth = Number(this.maxWidth);
+      this.resizeQuality = Number(this.quality) / 100;
+    },
+
+    handleResizeChange({ originalSize, resizeSize }) {
+      console.log({ originalSize, resizeSize });
+      this.sizeReduction = (
+        ((originalSize - resizeSize) / originalSize) *
+        100
+      ).toFixed(2);
     },
   },
 };
@@ -99,11 +139,13 @@ export default {
 
 <style lang="scss" scoped>
 #app {
-  display: flex;
   min-height: 100vh;
-  align-items: center;
-  justify-content: center;
+  padding: 3.2rem;
   text-align: center;
+
+  &.size-reduction-active {
+    padding-bottom: 18.2rem;
+  }
 }
 
 .container {
@@ -128,25 +170,32 @@ h1 {
   margin: 2rem 0;
 }
 
-.upload {
+.size-reduction {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  width: 100%;
+  height: 15rem;
+  padding: 2rem;
   margin-top: 2rem;
-  padding: 0.5rem 1rem;
-  border: none;
   background-color: #24a0ed;
   color: white;
-  border-radius: 0.25rem;
-  font-size: 1.2em;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.2s ease-in-out;
+  transform: translate3d(0, 100%, 0);
+  transition: transform 0.2s ease-in-out;
 
-  &:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
+  &.active {
+    transform: translate3d(0, 0, 0);
   }
 
-  &:not(:disabled):hover {
-    background-color: #1183ca;
+  > span {
+    display: block;
+    margin: 0.25em 0;
+    font-size: 3.2em;
+    font-weight: bold;
   }
 }
 </style>
