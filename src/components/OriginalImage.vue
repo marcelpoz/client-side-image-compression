@@ -1,5 +1,5 @@
 <template>
-  <div class="original-image">
+  <div class="original-image" :class="{ 'original-image--has-image': file } ">
     <h3 class="original-image__title">Original image</h3>
     <div class="original-image__inner">
       <Loader v-if="loading" class="original-image__loader" />
@@ -72,6 +72,8 @@ export default {
 
 <style lang="scss" scoped>
 .original-image {
+  $block: &;
+
   &__title {
     margin-bottom: 1em;
   }
@@ -81,9 +83,13 @@ export default {
     align-items: center;
     justify-content: center;
     min-height: 500px;
-    width: 500px;
+    width: 100%;
     background-color: #fafafa;
     border: 1px solid #ccc;
+
+    #{$block}--has-image & {
+      min-height: 0;
+    }
   }
 
   &__result {
