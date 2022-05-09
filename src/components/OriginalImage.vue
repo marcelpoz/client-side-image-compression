@@ -3,12 +3,12 @@
     <h3 class="original-image__title">Original image</h3>
     <div class="original-image__inner">
       <Loader v-if="loading" class="original-image__loader" />
-      <span v-else-if="!file">Upload an image first chap</span>
+      <span v-else-if="!file">Resize an image first kidda</span>
       <span v-else-if="error">Something went wrong oh no!</span>
       <figure class="original-image__result" v-else>
         <img :src="result" alt="" />
-        <figcaption>Original dimensions: {{ width }}*{{ height }}</figcaption>
-        <figcaption>File size: {{ size }}</figcaption>
+        <figcaption>Dimensions: <strong>{{ width }}x{{ height }}</strong></figcaption>
+        <figcaption>File size: <strong>{{ size }}</strong></figcaption>
       </figure>
     </div>
   </div>
@@ -32,6 +32,7 @@ export default {
   data() {
     return {
       loading: false,
+      error: false,
       result: undefined,
       width: "unknown",
       height: "unknown",
@@ -41,6 +42,8 @@ export default {
 
   watch: {
     file(file) {
+      if (!file) return;
+
       try {
         this.loading = true;
         this.result = URL.createObjectURL(file);

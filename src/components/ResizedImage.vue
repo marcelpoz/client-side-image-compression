@@ -6,8 +6,12 @@
       <span v-else-if="!file">Upload an image first chap</span>
       <figure class="resized-image__result" v-else>
         <img :src="result" alt="" />
-        <figcaption><strong>Resized dimensions:</strong> {{ width }}*{{ height }}</figcaption>
-        <figcaption><strong>File size:</strong> {{ size }}</figcaption>
+        <figcaption>
+          Dimensions: <strong>{{ width }}x{{ height }}</strong>
+        </figcaption>
+        <figcaption>
+          File size: <strong>{{ size }}</strong>
+        </figcaption>
       </figure>
     </div>
   </section>
@@ -36,6 +40,7 @@ export default {
   data() {
     return {
       loading: false,
+      error: false,
       result: undefined,
       width: "unknown",
       height: "unknown",
@@ -44,37 +49,53 @@ export default {
   },
 
   watch: {
-    file(file) {
-      try {
-        this.loading = true;
-        const canvas = document.createElement("canvas");
-        const ctx = canvas.getContext("2d");
-        const image = new Image();
-        image.src = URL.createObjectURL(file);
-        image.onload = () => {
-          const ratio = this.maxWidth / image.width;
-          canvas.width = image.width * ratio;
-          canvas.height = image.height * ratio;
-          console.log(canvas.width, canvas.height);
-          ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+    file: {
+      immediate: true,
+      handler(file) {
+        if (!file) return;
 
-          canvas.toBlob((blob) => {
-            this.result = URL.createObjectURL(blob);
-            this.size = `${Math.round(blob.size / 1024)} KB`;
-            const resizedImage = new Image();
-            resizedImage.src = this.result;
-            resizedImage.onload = () => {
-              this.width = `${resizedImage.width}`;
-              this.height = `${resizedImage.height}px`;
-            };
-          }, "image/jpeg", 0.75);
-        };
-      } catch (error) {
-        this.error = true;
-        console.error(error);
-      } finally {
-        this.loading = false;
-      }
+        try {
+          this.loading = true;
+          const canvas = document.createElement("canvas");
+          const ctx = canvas.getContext("2d");
+          const image = new Image();
+          image.src = URL.createObjectURL(file);
+          image.onload = () => {
+            const ratio = this.maxWidth / image.width;
+
+            if (ratio < 1) {
+              canvas.width = image.width * ratio;
+              canvas.height = image.height * ratio;
+              ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+              canvas.toBlob(
+                (blob) => {
+                  this.result = URL.createObjectURL(blob);
+                  this.size = `${Math.round(blob.size / 1024)} KB`;
+                  const resizedImage = new Image();
+                  resizedImage.src = this.result;
+                  resizedImage.onload = () => {
+                    this.width = resizedImage.width;
+                    this.height = `${resizedImage.height}px`;
+                  };
+                },
+                "image/jpeg",
+                0.75
+              );
+            } else {
+              this.result = URL.createObjectURL(file);
+              this.size = `${Math.round(file.size / 1024)} KB`;
+              this.width = image.width;
+              this.height = `${image.height}px`;
+            }
+          };
+        } catch (error) {
+          this.error = true;
+          console.error(error);
+        } finally {
+          this.loading = false;
+        }
+      },
     },
   },
 };
