@@ -91,6 +91,14 @@ export default {
     color: #000;
     background-color: #fff;
     outline: none;
+
+    &:hover {
+      border-bottom: 1px solid #000;
+    }
+
+    &:focus {
+      border-bottom: 1px solid #24a0ed;
+    }
   }
 
   &__input span {
