@@ -6,8 +6,8 @@
       <span v-else-if="!file">Upload an image first chap</span>
       <figure class="resized-image__result" v-else>
         <img :src="result" alt="" />
-        <figcaption>Resized dimensions: {{ width }}*{{ height }}</figcaption>
-        <figcaption>File size: {{ size }}</figcaption>
+        <figcaption><strong>Resized dimensions:</strong> {{ width }}*{{ height }}</figcaption>
+        <figcaption><strong>File size:</strong> {{ size }}</figcaption>
       </figure>
     </div>
   </section>
