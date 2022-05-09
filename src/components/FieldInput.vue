@@ -11,6 +11,8 @@
         :value="value"
         @input="handleInput"
         :placeholder="placeholderValue"
+        :min="min"
+        :max="max"
       />
       <span v-if="valueType">{{ valueType }}</span>
     </div>
@@ -24,24 +26,39 @@ export default {
       type: String,
       required: true,
     },
+
     labelValue: {
       type: String,
       default: undefined,
     },
+
     initialValue: {
       type: String,
       default: undefined,
     },
+
     placeholderValue: {
       type: String,
       default: undefined,
     },
+
     type: {
       type: String,
       default: "text",
     },
+
     valueType: {
       type: String,
+      default: undefined,
+    },
+
+    min: {
+      type: Number,
+      default: undefined,
+    },
+
+    max: {
+      type: Number,
       default: undefined,
     },
   },
@@ -70,8 +87,9 @@ export default {
   gap: 1rem;
 
   &__label {
-    font-size: 1.2rem;
+    font-size: 1em;
     font-weight: bold;
+    text-align: left;
     margin-bottom: 0.5rem;
   }
 
@@ -91,13 +109,14 @@ export default {
     color: #000;
     background-color: #fff;
     outline: none;
+    transition: border-color 0.2s ease-in-out;
 
     &:hover {
-      border-bottom: 1px solid #000;
+      border-color: #000;
     }
 
     &:focus {
-      border-bottom: 1px solid #24a0ed;
+      border-color: #24a0ed;
     }
   }
 
