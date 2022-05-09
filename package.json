@@ -1,0 +1,20 @@
+{
+  "name": "img-to-canvas-compression",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite",
+    "deploy": "vercel",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "sass": "^1.51.0",
+    "vue": "^3.2.25"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^2.3.1",
+    "vercel": "^24.2.1",
+    "vite": "^2.9.7"
+  }
+}
