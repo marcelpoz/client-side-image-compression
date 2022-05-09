@@ -70,13 +70,15 @@ export default {
 
               canvas.toBlob(
                 (blob) => {
-                  this.result = URL.createObjectURL(blob);
-                  this.size = `${Math.round(blob.size / 1024)} KB`;
+                  const result = URL.createObjectURL(blob);
+                  const size = `${Math.round(blob.size / 1024)} KB`;
                   const resizedImage = new Image();
-                  resizedImage.src = this.result;
+                  resizedImage.src = result;
                   resizedImage.onload = () => {
+                    this.size = size;
                     this.width = resizedImage.width;
                     this.height = `${resizedImage.height}px`;
+                    this.result = result;
                   };
                 },
                 "image/jpeg",
