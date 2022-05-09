@@ -3,12 +3,16 @@
     <h3 class="original-image__title">Original image</h3>
     <div class="original-image__inner">
       <Loader v-if="loading" class="original-image__loader" />
-      <span v-else-if="!file">Resize an image first kidda</span>
+      <span v-else-if="!file">Upload an image first kidda</span>
       <span v-else-if="error">Something went wrong oh no!</span>
       <figure class="original-image__result" v-else>
         <img :src="result" alt="" />
-        <figcaption>Dimensions: <strong>{{ width }}x{{ height }}</strong></figcaption>
-        <figcaption>File size: <strong>{{ size }}</strong></figcaption>
+        <figcaption>
+          Dimensions: <strong>{{ width }}x{{ height }}</strong>
+        </figcaption>
+        <figcaption>
+          File size: <strong>{{ size }}</strong>
+        </figcaption>
       </figure>
     </div>
   </div>
@@ -46,13 +50,14 @@ export default {
 
       try {
         this.loading = true;
-        this.result = URL.createObjectURL(file);
-        this.size = `${Math.round(file.size / 1024)} KB`;
+        const result = URL.createObjectURL(file);
         const image = new Image();
-        image.src = this.result;
+        image.src = result;
         image.onload = () => {
           this.width = `${image.width}`;
           this.height = `${image.height}px`;
+          this.size = `${Math.round(file.size / 1024)} KB`;
+          this.result = result;
         };
       } catch (error) {
         this.error = true;
@@ -78,6 +83,7 @@ export default {
     min-height: 500px;
     width: 500px;
     background-color: #fafafa;
+    border: 1px solid #ccc;
   }
 
   &__result {
