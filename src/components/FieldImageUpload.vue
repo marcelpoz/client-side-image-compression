@@ -2,7 +2,7 @@
   <div class="field-image-upload">
     <label class="field-image-upload__label" :for="name"> </label>
     <div class="field-image-upload__input">
-      <input type="file" :id="name" :name="name" @change="handleChange" />
+      <input type="file" :id="name" :name="name" @change="handleChange" accept=".jpg,.jpeg,.png,.gif" />
     </div>
   </div>
 </template>
