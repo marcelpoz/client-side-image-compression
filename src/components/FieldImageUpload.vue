@@ -2,7 +2,13 @@
   <div class="field-image-upload">
     <label class="field-image-upload__label" :for="name"> </label>
     <div class="field-image-upload__input">
-      <input type="file" :id="name" :name="name" @change="handleChange" accept=".jpg,.jpeg,.png,.gif" />
+      <input
+        type="file"
+        :id="name"
+        :name="name"
+        @change="handleChange"
+        accept=".jpg,.jpeg,.png,.gif"
+      />
     </div>
   </div>
 </template>
@@ -29,8 +35,16 @@ export default {
   },
 
   methods: {
-    handleChange(event) {
-      this.file = event.target.files[0];
+    handleChange({ target }) {
+      const file = target.files[0];
+      if (
+        file.type !== "image/jpeg" &&
+        file.type !== "image/png" &&
+        file.type !== "image/gif"
+      )
+        return;
+
+      this.file = file;
       this.$emit("change", this.file);
     },
   },
