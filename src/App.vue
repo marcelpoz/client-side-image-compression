@@ -15,7 +15,7 @@
           label-value="Max width"
           placeholder-value="Enter number here..."
           value-type="px"
-          min="1"
+          :min="1"
           :initial-value="maxWidth"
           @input="handleMaxWidthInputChange"
         />
@@ -26,8 +26,8 @@
           label-value="Quality level"
           placeholder-value="Enter number here..."
           value-type="%"
-          min="1"
-          max="100"
+          :min="1"
+          :max="100"
           :initial-value="quality"
           @input="handleQualityInputChange"
         />
@@ -126,12 +126,17 @@ export default {
       this.resizeQuality = Number(this.quality) / 100;
     },
 
-    handleResizeChange({ originalSize, resizeSize }) {
-      console.log({ originalSize, resizeSize });
+    async handleResizeChange({ originalSize, resizeSize }) {
       this.sizeReduction = (
         ((originalSize - resizeSize) / originalSize) *
         100
       ).toFixed(2);
+      await this.$nextTick();
+      window.scrollTo({
+        top: document.body.scrollHeight,
+        left: 0,
+        behavior: "smooth",
+      });
     },
   },
 };
