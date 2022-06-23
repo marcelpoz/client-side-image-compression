@@ -4,4 +4,4 @@ This puppy converts images on the client to smaller ones using HTML canvas goodn
 
 Run npm install and npm run dev to run it locally.
 
-Check out a demo here.
+[Demo](http://client-side-image-compression.vercel.app/)
