@@ -81,7 +81,7 @@ export default {
     return {
       file: undefined,
       maxWidth: "500",
-      quality: "75",
+      quality: "90",
       resizeFile: undefined,
       resizeMaxWidth: 500,
       resizeQuality: 0.75,
